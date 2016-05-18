@@ -1,0 +1,18 @@
+CREATE TABLE `equation`.`database_equation` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_user` INT NULL,
+  `equation` TEXT NULL,
+  `result` DECIMAL(50) NULL,
+  PRIMARY KEY (`id`));
+  
+  CREATE TABLE `equation`.`users` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `login` VARCHAR(10) NULL,
+    `pass` VARCHAR(16) NULL,
+    `name` VARCHAR(30) NULL,
+    PRIMARY KEY (`id`)
+);
+
+ALTER TABLE `equation`.`database_equation` 
+ADD CONSTRAINT `id_user` FOREIGN KEY (`id_user`)
+  REFERENCES `equation`.`users` (`id`);
