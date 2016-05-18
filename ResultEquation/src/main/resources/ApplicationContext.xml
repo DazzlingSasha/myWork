@@ -1,0 +1,68 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <bean id="multitasking" class="Calculator.Module.Multitasks" abstract="true"/>
+
+    <bean id="summation" class="Calculator.Module.Summation" parent="multitasking"/>
+    <bean id="subtraction" class="Calculator.Module.Subtraction" parent="multitasking"/>
+    <bean id="multiplication" class="Calculator.Module.Multiplication" parent="multitasking"/>
+    <bean id="division" class="Calculator.Module.Division" parent="multitasking"/>
+    <bean id="power" class="Calculator.Module.Power" parent="multitasking"/>
+
+    <bean id="calculator" class="Calculator.FeaturesCalculator">
+        <constructor-arg>
+            <map>
+                <entry key="+" value-ref="summation"/>
+                <entry key="-" value-ref="subtraction"/>
+                <entry key="*" value-ref="multiplication"/>
+                <entry key="/" value-ref="division"/>
+                <entry key="^" value-ref="power"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="levels" class="Calculator.Module.Levels">
+        <constructor-arg>
+            <map>
+                <entry key="+" value="1"/>
+                <entry key="-" value="1"/>
+                <entry key="*" value="2"/>
+                <entry key="/" value="2"/>
+                <entry key="(" value="0"/>
+                <entry key=")" value="0"/>
+                <entry key="^" value="3"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="parserEquation" class="Calculator.ParserEquation">
+        <constructor-arg ref="calculator"/>
+        <constructor-arg ref="authorization"/>
+        <constructor-arg ref="databaseEquationDao"/>
+        <property name="mapValue" ref="levels"/>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/equation?useSSL=false"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+
+    <bean id="userDao" class="Calculator.jdbc.UserDao">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="databaseEquationDao" class="Calculator.jdbc.DatabaseEquationDao">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="authorization" class="Calculator.Authorization">
+        <constructor-arg  ref="userDao"/>
+    </bean>
+
+</beans>
