@@ -39,11 +39,10 @@ public class Authorization {
                 while (!isLogin) {
                     System.out.println("Enter your login. If you are not registered write 'reg'");
                     String login = scanner.next().replace(" ", "");
-                    isLogin = checksLogin(login);
-
-                    if (("reg").equals(enter)) {
+                    if (("reg").equals(login)) {
                         register();
                     }
+                    isLogin = checksLogin(login);
                 }
 
                 while (!isPass) {
